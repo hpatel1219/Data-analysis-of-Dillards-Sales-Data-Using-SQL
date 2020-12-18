@@ -76,7 +76,7 @@ we consider these consistently high- and low- performing months. */
 
 
 SELECT s1.store, s1.percent_change_revenue, st.city, st.state, s1.dept, d.deptdesc
-FROM	(SELECT SUM(CASE WHEN EXTRACT(MONTH from t.saledate) =11 THEN amt END) AS Nov_revenue,
+FROM(	 SELECT SUM(CASE WHEN EXTRACT(MONTH from t.saledate) =11 THEN amt END) AS Nov_revenue,
                 SUM(CASE WHEN EXTRACT(MONTH from t.saledate) =12 THEN amt END) AS Dec_revenue,
                 COUNT(DISTINCT CASE WHEN EXTRACT(MONTH from t.saledate) = 11 THEN t.saledate END) AS Nov_days,
 		COUNT(DISTINCT CASE WHEN EXTRACT(MONTH from t.saledate) = 12 THEN t.saledate END) AS Dec_days,
@@ -89,8 +89,8 @@ FROM	(SELECT SUM(CASE WHEN EXTRACT(MONTH from t.saledate) =11 THEN amt END) AS N
 	WHERE stype = 'P' AND exclude_flag IS NULL
 	GROUP BY dept, store, exclude_flag
 	HAVING Nov_days > 27 AND Dec_days > 27) AS s1 JOIN strinfo st ON
-					S1.store=st.store JOIN deptinfo d ON
-					S1.dept=d.dept
+		S1.store=st.store JOIN deptinfo d ON
+		S1.dept=d.dept
 GROUP BY 1,2,3,4,5,6
 ORDER BY 2 DESC;
 
@@ -151,7 +151,7 @@ SELECT SUM(revenue_per_store.revenue)/SUM(numdays) AS avg_group_revenue,
        WHEN revenue_per_store.msa_income BETWEEN 30001 AND 40000 THEN 'med-high'
        WHEN revenue_per_store.msa_income BETWEEN 40001 AND 60000 THEN 'high'
        END AS income_group
-FROM ( SELECT m.msa_income, t.store, 
+FROM(  SELECT m.msa_income, t.store, 
               CASE WHEN EXTRACT(YEAR from t.saledate) = 2005 AND EXTRACT(MONTH from t.saledate) = 8 then 'exclude' END AS exclude_flag, 
 	      SUM(t.amt) AS revenue, COUNT(DISTINCT t.saledate) AS numdays, EXTRACT(MONTH from t.saledate) AS monthID
        FROM   store_msa m JOIN trnsact t ON
@@ -176,7 +176,7 @@ ORDER BY avg_group_revenue DESC;
 
 SELECT SUM(store_rev.tot_sales)/SUM(store_rev.numdays) AS daily_average, store_rev.msa_income as med_income, 
        store_rev.city, store_rev.state
-FROM ( SELECT 	COUNT(DISTINCT t.saledate) AS numdays, EXTRACT(YEAR from t.saledate) AS s_year, 
+FROM(  SELECT 	COUNT(DISTINCT t.saledate) AS numdays, EXTRACT(YEAR from t.saledate) AS s_year, 
                	EXTRACT(MONTH from t.saledate) AS s_month,
        		t.store, SUM(t.amt) AS tot_sales, 
        		CASE WHEN EXTRACT(YEAR from t.saledate) = 2005 AND EXTRACT(MONTH from t.saledate) = 8 THEN 'exclude' END AS exclude_flag, 
