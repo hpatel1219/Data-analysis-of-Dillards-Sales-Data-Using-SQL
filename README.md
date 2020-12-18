@@ -16,7 +16,7 @@ SPAP (Structured Pyramid Analysis Plan)
 
         a.	Considering the level of median Income
         
-        b.	Considering populations
+        b.	Considering population group
         
         c.	Considering the level of high school education
 
